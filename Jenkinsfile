@@ -1,9 +1,14 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'cimg/node:22.6.0'   // Imagen con Node y npm ya instalados
+      args '-v /var/run/docker.sock:/var/run/docker.sock' // permite usar Docker
+    }
+  }
 
   environment {
-      BACKEND_DIR = "backend"
-      FRONTEND_DIR = "frontend"
+    BACKEND_DIR = "backend"
+    FRONTEND_DIR = "frontend"
   }
 
   stages {
@@ -32,7 +37,7 @@ pipeline {
 
     stage('Levantar Contenedores') {
       steps {
-        sh 'docker-compose down'
+        sh 'docker-compose down || true'
         sh 'docker-compose up -d --build'
       }
     }
