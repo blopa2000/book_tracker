@@ -36,6 +36,22 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+  jenkins:
+    image: jenkins/jenkins:lts-jdk17
+    container_name: jenkins
+    ports:
+      - "8080:8080"      # interfaz web de Jenkins
+      - "50000:50000"    # puerto para agentes Jenkins
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock # para que Jenkins use Docker
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+    depends_on:
+      - backend
+      - frontend
+      - mongo
 
 volumes:
   mongo_data:
+  jenkins_home:
