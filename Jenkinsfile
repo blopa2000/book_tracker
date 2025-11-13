@@ -1,10 +1,5 @@
 pipeline {
-  agent {
-    docker {
-      image 'cimg/node:22.6.0'   // Imagen con Node y npm ya instalados
-      args '-v /var/run/docker.sock:/var/run/docker.sock' // permite usar Docker
-    }
-  }
+  agent any
 
   environment {
     BACKEND_DIR = "backend"
@@ -14,29 +9,35 @@ pipeline {
   stages {
     stage('Clonar repositorio') {
       steps {
-        git branch: 'main', url: 'https://github.com/blopa2000/book_tracker.git'
+          echo '📦 Clonando el repositorio...'
+          deleteDir()
+          git url: 'https://github.com/blopa2000/book_tracker.git', branch: 'main'
       }
     }
 
-    stage('Construir Backend') {
+    stage('Construir y Desplegar con Docker') {
+      agent {
+        docker {
+          image 'cimg/node:22.6.0'
+          args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+      }
       steps {
         dir("${BACKEND_DIR}") {
           sh 'npm install'
         }
-      }
-    }
 
-    stage('Construir Frontend') {
-      steps {
         dir("${FRONTEND_DIR}") {
           sh 'npm install'
           sh 'npm run build'
         }
-      }
-    }
 
-    stage('Levantar Contenedores') {
-      steps {
+        //SE CREA EL .env ANTES DE LEVANTAR DOCKER
+        sh '''
+          echo "PORT=5000" > backend/.env
+          echo "MONGO_URI=mongodb://mongo:27017/book_tracker" >> backend/.env
+        '''
+
         sh 'docker-compose down || true'
         sh 'docker-compose up -d --build'
       }

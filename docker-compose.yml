@@ -5,7 +5,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - "5001:5000"
     env_file:
       - ./backend/.env
     environment:
@@ -13,18 +13,18 @@ services:
     depends_on:
       - mongo
     volumes:
-      - ./backend:/app        # monta el código local dentro del contenedor
-      - /app/node_modules     # evita conflictos de node_modules
+      - ./backend:/app # monta el código local dentro del contenedor
+      - /app/node_modules # evita conflictos de node_modules
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "5173:5173"
+      - "5174:5173"
     depends_on:
       - backend
     volumes:
-      - ./frontend:/app       # monta tu código de React
+      - ./frontend:/app # monta tu código de React
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
@@ -33,15 +33,19 @@ services:
   mongo:
     image: mongo
     ports:
-      - "27017:27017"
+      - "27018:27017"
     volumes:
       - mongo_data:/data/db
   jenkins:
-    image: jenkins/jenkins:lts-jdk17
-    container_name: jenkins
+    build:
+      context: ./jenkins
+      dockerfile: Dockerfile
+    container_name: jenkins-ci
+    user: root
+    privileged: true
     ports:
-      - "8080:8080"      # interfaz web de Jenkins
-      - "50000:50000"    # puerto para agentes Jenkins
+      - "8090:8080" # interfaz web de Jenkins
+      - "50001:50000" # puerto para agentes Jenkins
     volumes:
       - jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock # para que Jenkins use Docker
