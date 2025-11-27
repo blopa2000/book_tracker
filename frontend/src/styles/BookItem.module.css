@@ -1,0 +1,41 @@
+.card {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+.author {
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.select {
+  padding: 5px;
+}
+
+.rating {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.deleteButton {
+  background: #ef4444;
+  padding: 10px;
+  width: 100%;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.deleteButton:hover {
+  background: #dc2626;
+}

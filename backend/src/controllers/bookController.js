@@ -1,11 +1,10 @@
 import Book from "../models/Book.js";
 
 export const getBooks = async (req, res) => {
-  res.json({ message: "mensaje desde el servidor conectado" });
+  // res.json({ message: "mensaje desde el servidor conectado" });
+  const books = await Book.find();
+  res.json(books);
 };
-
-//const books = await Book.find();
-// res.json(books);
 
 export const addBook = async (req, res) => {
   const newBook = new Book(req.body);
