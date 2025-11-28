@@ -4,11 +4,14 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   test: {
-    globals: true, // permite usar `describe`, `test`, `expect` sin importarlos
-    environment: "jsdom", // emula navegador
-    setupFiles: "./src/setupTests.ts", // opcional, para imports globales de testing-library
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./src/setupTests.ts",
     coverage: {
-      reporter: ["text", "lcov"], // cobertura en consola y lcov para codecov
+      provider: "v8",
+      reporter: ["text", "lcov"],
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: ["node_modules", "tests"],
     },
   },
 });
